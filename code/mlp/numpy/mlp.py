@@ -1,3 +1,5 @@
+# Gasper Spagnolo, 2024
+
 import numpy as np
 
 
@@ -22,9 +24,13 @@ class NN:
     def forward(self, inputs):
         inputs = np.array(inputs, ndmin=2)
         activations = [inputs]
-        for w, b in zip(self.weights, self.biases):
+        for i, (w, b) in enumerate(zip(self.weights, self.biases)):
             z = np.dot(activations[-1], w.T) + b.T
-            a = self.sigmoid(z)
+            if i == len(self.weights) - 1:
+                # Output layer uses linear activation
+                a = z
+            else:
+                a = self.sigmoid(z)
             activations.append(a)
         return activations
 
@@ -38,7 +44,11 @@ class NN:
         batch_size = X.shape[0]
         errors = [self.cost_function_prime(activations[-1], y)]
         for i in reversed(range(len(self.weights))):
-            delta = errors[-1] * self.sigmoid_prime(activations[i + 1])
+            if i == len(self.weights) - 1:
+                # Output layer derivative is 1
+                delta = errors[-1]
+            else:
+                delta = errors[-1] * self.sigmoid_prime(activations[i + 1])
             grad_w = np.dot(delta.T, activations[i]) / batch_size
             grad_b = np.mean(delta, axis=0, keepdims=True).T
             errors.append(np.dot(delta, self.weights[i]))
@@ -55,6 +65,8 @@ class NN:
             activations = self.forward(inputs_batch)
             self.backprop(inputs_batch, targets_batch, activations)
             fit_loss += self.cost_function(activations[-1], targets_batch)
+
+        fit_loss /= len(inputs_list)
 
         print(f"Loss: {fit_loss}")
 
@@ -86,7 +98,7 @@ if __name__ == "__main__":
 
     nn = NN(layers=[8, 20, 10, 1], learning_rate=0.1)
 
-    epochs = 500
+    epochs = 100
     for epoch in range(epochs):
         nn.fit(X_train, y_train)
 
