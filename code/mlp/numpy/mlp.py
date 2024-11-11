@@ -68,19 +68,19 @@ class NN:
 
         fit_loss /= len(inputs_list)
 
-        print(f"Loss: {fit_loss}")
-
     def predict(self, inputs_list):
         return self.forward(inputs_list)[-1]
-
 
 if __name__ == "__main__":
     from sklearn.datasets import fetch_california_housing
     from sklearn.model_selection import train_test_split
     from sklearn.preprocessing import StandardScaler
     from sklearn.metrics import mean_squared_error
+    from sklearn.linear_model import LinearRegression
+    from sklearn.neural_network import MLPRegressor
     import numpy as np
 
+    # Load and preprocess data
     data = fetch_california_housing()
     X = data["data"]
     y = data["target"].reshape(-1, 1)
@@ -93,22 +93,42 @@ if __name__ == "__main__":
     scaler_y = StandardScaler()
     X_train = scaler_X.fit_transform(X_train)
     X_test = scaler_X.transform(X_test)
-    y_train = scaler_y.fit_transform(y_train)
-    y_test = scaler_y.transform(y_test)
+    y_train = scaler_y.fit_transform(y_train).ravel()  # Flatten for scikit-learn compatibility
+    y_test = scaler_y.transform(y_test).ravel()
 
+    # Train NN 
     nn = NN(layers=[8, 20, 10, 1], learning_rate=0.1)
-
     epochs = 100
     for epoch in range(epochs):
-        nn.fit(X_train, y_train)
+        nn.fit(X_train, y_train.reshape(-1, 1))  # Reshape to keep consistency
 
-    predictions = []
+    predictions_nn = []
     for x in X_test:
         output = nn.predict(x)
-        predictions.append(output[0, 0])
+        predictions_nn.append(output[0, 0])
 
-    predictions = scaler_y.inverse_transform(np.array(predictions).reshape(-1, 1))
-    y_test_original = scaler_y.inverse_transform(y_test)
+    predictions_nn = scaler_y.inverse_transform(np.array(predictions_nn).reshape(-1, 1))
+    y_test_original = scaler_y.inverse_transform(y_test.reshape(-1, 1))
 
-    mse = mean_squared_error(y_test_original, predictions)
-    print(f"Mean Squared Error on California Housing dataset: {mse:.2f}")
+    mse_nn = mean_squared_error(y_test_original, predictions_nn)
+    print(f"Neural Network Mean Squared Error: {mse_nn:.2f}")
+
+    # Train scikit-learn Neural Network (MLPRegressor)
+    mlp_reg = MLPRegressor(hidden_layer_sizes=(20, 10), learning_rate_init=0.1, max_iter=100, random_state=42)
+    mlp_reg.fit(X_train, y_train)
+
+    predictions_mlp = mlp_reg.predict(X_test).reshape(-1, 1)
+    predictions_mlp = scaler_y.inverse_transform(predictions_mlp)
+
+    mse_mlp = mean_squared_error(y_test_original, predictions_mlp)
+    print(f"scikit-learn Neural Network Mean Squared Error: {mse_mlp:.2f}")
+
+    # Train Linear Regression model
+    linear_reg = LinearRegression()
+    linear_reg.fit(X_train, y_train)
+
+    predictions_lr = linear_reg.predict(X_test)
+    predictions_lr = scaler_y.inverse_transform(predictions_lr.reshape(-1, 1))
+
+    mse_lr = mean_squared_error(y_test_original, predictions_lr)
+    print(f"Linear Regression Mean Squared Error: {mse_lr:.2f}")
