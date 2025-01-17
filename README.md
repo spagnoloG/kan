@@ -1,4 +1,4 @@
-i# 🌟 Understanding Kolmogorov-Arnold Networks (KANs)
+# 🌟 Understanding Kolmogorov-Arnold Networks (KANs)
 
 ## 📝 Summary: Introduction to Kolmogorov-Arnold Networks
 This repository provides foundational knowledge for understanding **Kolmogorov-Arnold Networks (KANs)**, starting with Bézier curves, B-splines, and their role in function approximation. Building on these concepts, it explains the KAN architecture and its applications in approximating complex functions.
