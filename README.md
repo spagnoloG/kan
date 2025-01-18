@@ -6,22 +6,22 @@ This repository provides foundational knowledge for understanding **Kolmogorov-A
 ## 🎯 Lecture Overview
 In this lecture, we will cover the following topics:
 
-### 1. **🎨 Bézier Curves**
+### 1. [**🎨 Bézier Curves**](https://github.com/spagnoloG/kan/blob/main/code/notebooks/01-bezier_curves.ipynb)
    - Introduction to Bézier curves.
    - Mathematical formulation and significance in curve modeling.
    - Visualization and examples.
 
-### 2. **📐 B-splines**
+### 2. [**📐 B-splines**](https://github.com/spagnoloG/kan/blob/main/code/notebooks/02-bsplines.ipynb)
    - Overview of B-splines and their properties.
    - Role of linear combinations in function approximation.
    - Practical applications of B-splines in modeling.
 
-### 3. **🔧 Function Approximation with Splines**
+### 3. [**🔧 Function Approximation with Splines**](https://github.com/spagnoloG/kan/blob/main/code/notebooks/02-bsplines.ipynb)
    - Understanding spline-based function approximation.
    - Comparing splines with other function approximation methods.
    - Challenges and advantages.
 
-### 4. **🚀 Kolmogorov-Arnold Networks (KANs)**
+### 4. [**🚀 Kolmogorov-Arnold Networks (KANs)**](https://github.com/spagnoloG/kan/blob/main/code/notebooks/03-kan.ipynb)
    - Introduction to the KAN architecture.
    - Theoretical foundations:
      - Kolmogorov-Arnold representation theorem.
